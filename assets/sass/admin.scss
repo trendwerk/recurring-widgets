@@ -1,0 +1,18 @@
+/**
+ * @section Admin
+ *
+ * Defines the styling of the entire admin area
+ *
+ * @package   		WordPress
+ * @subpackage 		Recurring widgets
+ * @author    		Trendwerk
+ * @license   		GPL v2
+ * 
+ */
+
+.duplicate_widget_form {
+	select {
+		margin: 10px 0px;
+		width: 100%;
+	}
+}

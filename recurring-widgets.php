@@ -7,11 +7,20 @@
  * Author: Trendwerk
  * Author URI: http://www.trendwerk.nl/
  * Text Domain: recurring-widgets
- * Domain Path: /lang/
  */
 
 if ( ! class_exists( 'c2c_DuplicateWidget' ) ) :
 
+/**
+ * Loads the localization textdomain for the plugin.
+ *
+ * Translations go into 'assets/lang' sub-directory.
+ */
+load_plugin_textdomain( 'recurring-widgets', false, basename( dirname( __FILE__ ) ) . DIRECTORY_SEPARATOR . 'assets/lang' );
+
+/**
+ * Actual class
+ */
 class c2c_DuplicateWidget extends WP_Widget {
 
 	private static $title          = '';
@@ -29,7 +38,7 @@ class c2c_DuplicateWidget extends WP_Widget {
 	 * Returns version of the plugin.
 	 */
 	public static function version() {
-		return '1.0.2';
+		return '1.1';
 	}
 
 	/**
@@ -38,10 +47,10 @@ class c2c_DuplicateWidget extends WP_Widget {
 	public static function init() {
 		// Register the widget
 		add_action( 'widgets_init',     array( __CLASS__, '__register' ) );
+		// Register sidebar
+		add_action( 'init',             array( __CLASS__, 'register_sidebar' ), 999 );
 		// Output message at bottom of widgets that have been duplicated to make note of such
 		add_action( 'in_widget_form',   array( __CLASS__, 'note_duplicates' ), 10, 3 );
-		// Load localization
-		add_action( 'admin_init',       array( __CLASS__, 'load_textdomain' ) );
 		// Stuff to only do on the widgets admin page
 		add_action( 'load-widgets.php', array( __CLASS__, 'widgets_page_actions' ) );
 	}
@@ -54,14 +63,13 @@ class c2c_DuplicateWidget extends WP_Widget {
 	}
 
 	/**
-	 * Loads the localization textdomain for the plugin.
-	 *
-	 * Translations go into 'lang' sub-directory.
-	 *
-	 * @return void
+	 * Register recurring widgets sidebar
 	 */
-	public static function load_textdomain() {
-		load_plugin_textdomain( 'recurring-widgets', false, basename( dirname( __FILE__ ) ) . DIRECTORY_SEPARATOR . 'lang' );
+	public static function register_sidebar() {
+		register_sidebar( array(
+			'id'   => 'recurring-widgets',
+			'name' => __( 'Recurring widgets', 'recurring-widgets' ),
+		) );
 	}
 
 	/**
@@ -69,22 +77,24 @@ class c2c_DuplicateWidget extends WP_Widget {
 	 */
 	public static function widgets_page_actions() {
 		// Enqueue JS to make an indicator in titlebar of duplicated widgets
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_js' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin' ) );
 		// Clean up any duplicates whose source widget is no longer active
 		add_action( 'admin_init',            array( __CLASS__, 'delete_lame_dupes' ) );
 	}
 
 	/**
-	 * Enqueues admin JS to make an indicator in titlebar of duplicated widgets.
+	 * Enqueues admin scripts
 	 */
-	public static function enqueue_admin_js() {
+	public static function enqueue_admin() {
 		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( self::$widget_id, plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery' ), '0.1', true );
+		wp_enqueue_script( self::$widget_id, plugins_url( 'assets/js/admin.js', __FILE__ ), array( 'jquery' ), '0.1', true );
 		$strings = array(
 			'widget_is_duplicated' => __( 'This widget is duplicated elsewhere.', 'recurring-widgets' ),
 			'notation'             => __( '[D]', 'recurring-widgets' )
 		);
 		wp_localize_script( self::$widget_id, self::$widget_id, $strings );
+
+		wp_enqueue_style( 'recurring-widgets', plugins_url( 'assets/sass/admin.css', __FILE__ ) );
 	}
 
 	/**
@@ -101,19 +111,18 @@ class c2c_DuplicateWidget extends WP_Widget {
 		// Note: wp_get_sidebars_widgets() is noted as being a private function.
 		// I'd rather use it than to access data from globals and recreate logic
 		$sidebars_with_widgets = wp_get_sidebars_widgets();
+		$widgets               = $sidebars_with_widgets[ 'recurring-widgets'];
 		$sidebars_widgets      = array();
 		$duplicate_widgets     = array();
 
-		foreach ( $sidebars_with_widgets as $sidebar => $widgets ) {
-			if ( 'wp_inactive_widgets' == $sidebar || is_null( $widgets ) )
-				continue;
+		if ( is_null( $widgets ) )
+			continue;
 
-			foreach ( $widgets as $widget ) {
-				if ( strpos( $widget, self::$widget_id . '-' ) !== 0 )
-					$sidebars_widgets[] = $widget;
-				else // Record the duplicate widgets for possible other use
-					$duplicate_widgets[] = $widget;
-			}
+		foreach ( $widgets as $widget ) {
+			if ( strpos( $widget, self::$widget_id . '-' ) !== 0 )
+				$sidebars_widgets[] = $widget;
+			else // Record the duplicate widgets for possible other use
+				$duplicate_widgets[] = $widget;
 		}
 
 		self::$_duplicates = $duplicate_widgets;
@@ -154,7 +163,7 @@ class c2c_DuplicateWidget extends WP_Widget {
 
 		$instance = get_option( $wp_registered_widgets[$widget_id]['callback'][0]->option_name );
 
-		if ( is_array( $instance ) && array_key_exists( $widget_num, $instance ) )
+		if ( is_array( $instance ) && array_key_exists( $widget_num, $instance ) && isset( $instance[ $widget_num ]['title'] ) )
 			$title = $instance[$widget_num]['title'];
 		else
 			$title = '';
@@ -188,7 +197,6 @@ class c2c_DuplicateWidget extends WP_Widget {
 			$title = self::get_widget_title( $widget );
 			if ( ! empty( $title ) )
 				$label .= ": $title";
-			$label .= ' &#8212; ' . self::get_sidebar_name( self::find_sidebar_for_widget( $widget ) ) . '';
 			$selected = $value == $widget ? " selected='selected'" : '';
 			$html .= '<option value="' . $widget . '" ' . $selected . '">' . $label . "</option>\n";
 		}
@@ -378,8 +386,7 @@ class c2c_DuplicateWidget extends WP_Widget {
 		self::$title = __( 'Duplicate', 'recurring-widgets' );
 		$widget_ops = array(
 			'classname'   => 'widget_' . self::$widget_id,
-			'description' => __( 'Exact duplicate of any other widget.', 'recurring-widgets' ) . ' ' .
-							 __( '(If the source widget gets deactivated or deleted, its duplicate(s) disappear.)', 'recurring-widgets' )
+			'description' => __( 'Exact duplicate of any other widget.', 'recurring-widgets' ),
 		);
 		$control_ops = array( 'width' => '300' );
 		parent::__construct( self::$widget_id, self::$title, $widget_ops, $control_ops );
@@ -440,9 +447,6 @@ class c2c_DuplicateWidget extends WP_Widget {
 		echo '<input type="hidden" id="' . $this->get_field_id( 'title' ) . '"name="' . $this->get_field_name( 'title' ). '" value="' . $title . '" />';
 		echo $this->get_widgets_dropdown( null, $value );
 
-		echo '<p class="description">';
-		_e( 'Each dropdown item specifies the name/title of the original widget followed by the name of the sidebar containing that widget.' );
-		echo '</p>';
 		do_action( 'c2c_after_duplicate_widget_form', $instance );
 
 		echo "</div>";
