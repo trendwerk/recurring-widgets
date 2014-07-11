@@ -7,6 +7,7 @@
  * Author: Trendwerk
  * Author URI: http://www.trendwerk.nl/
  * Text Domain: recurring-widgets
+ * Domain Path: /assets/lang
  */
 
 if ( ! class_exists( 'c2c_DuplicateWidget' ) ) :
