@@ -1,0 +1,83 @@
+# Translation of the WordPress plugin Duplicate Widget v1.0 by Scott Reilly.
+# Copyright (C) 2011 Scott Reilly
+# This file is distributed under the same license as the Duplicate Widget plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Duplicate Widget 1.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/duplicate-widget\n"
+"POT-Creation-Date: 2011-12-05 23:13:53+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2010-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: duplicate-widget.php:110
+msgid "This widget is duplicated elsewhere."
+msgstr ""
+
+#: duplicate-widget.php:111
+msgid "[D]"
+msgstr ""
+
+#: duplicate-widget.php:211
+msgid "Choose widget to duplicate"
+msgstr ""
+
+#: duplicate-widget.php:374
+msgid "<strong>NOTE:</strong> This widget has <strong>%s</strong> duplicate."
+msgid_plural ""
+"<strong>NOTE:</strong> This widget has <strong>%s</strong> duplicates."
+msgstr[0] ""
+msgstr[1] ""
+
+#: duplicate-widget.php:381
+msgid ""
+"If you deactivate or delete this widget, that duplicate will be deleted."
+msgid_plural ""
+"If you deactivate or delete this widget, those duplicates will be deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+#: duplicate-widget.php:404
+msgid "Duplicate"
+msgstr ""
+
+#: duplicate-widget.php:407
+msgid "Exact duplicate of any other widget."
+msgstr ""
+
+#: duplicate-widget.php:408
+msgid ""
+"(If the source widget gets deactivated or deleted, its duplicate(s) "
+"disappear.)"
+msgstr ""
+
+#: duplicate-widget.php:470
+msgid ""
+"Each dropdown item specifies the name/title of the original widget followed "
+"by the name of the sidebar containing that widget."
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Duplicate Widget"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://coffee2code.com/wp-plugins/duplicate-widget/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"A widget that can act as a duplicate of another widget (for synchronized use "
+"in another sidebar)"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Scott Reilly"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://coffee2code.com"
+msgstr ""
