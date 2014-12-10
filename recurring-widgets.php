@@ -117,7 +117,7 @@ class c2c_DuplicateWidget extends WP_Widget {
 		$duplicate_widgets     = array();
 
 		if ( is_null( $widgets ) )
-			continue;
+			return;
 
 		foreach ( $widgets as $widget ) {
 			if ( strpos( $widget, self::$widget_id . '-' ) !== 0 )
