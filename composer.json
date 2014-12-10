@@ -1,0 +1,19 @@
+{
+	"name": "trendwerk/recurring-widgets",
+	"description": "Manage recurring widgets with the same settings. Made for WordPress.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0+",
+	"authors": [
+		{
+			"name": "Harold Angenent",
+			"email": "harold@trendwerk.nl"
+		},
+		{
+			"name": "Scott Reilly (coffee2code)"
+		}
+	],
+	"require": {
+		"php": ">=5.4",
+		"composer/installers": "v1.0.19"
+    }
+}
