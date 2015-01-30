@@ -1,11 +1,15 @@
 <?php
 /**
  * Plugin Name: Recurring widgets
- * Plugin URI: https://github.com/trendwerk/recurring-widgets
  * Description: Manage recurring widgets with the same settings.
- * Version: 1.1
+ * 
+ * Plugin URI: https://github.com/trendwerk/recurring-widgets
+ * 
  * Author: Trendwerk
- * Author URI: http://www.trendwerk.nl/
+ * Author URI: https://github.com/trendwerk
+ * 
+ * Version: 1.1.0
+ *
  * Text Domain: recurring-widgets
  * Domain Path: /assets/lang
  */
